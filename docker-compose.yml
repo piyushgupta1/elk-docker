@@ -57,15 +57,25 @@ services:
     depends_on:
       - elasticsearch
 
-  apm-server:
+  logstash:
     build:
-      context: apm-server/
+      context: logstash/
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
-      - ./apm-server/config/apm-server.yml:/usr/share/apm-server/apm-server.yml:ro
+      - type: bind
+        source: ./logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: true
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: true
     ports:
-      - '8200:8200'
+      - '5000:5000'
+      - '9600:9600'
+    environment:
+      LS_JAVA_OPTS: '-Xmx256m -Xms256m'
     networks:
       - elk
     depends_on:
@@ -73,7 +83,6 @@ services:
 
 networks:
   elk:
-    driver: bridge
 
 volumes:
   elasticsearch:

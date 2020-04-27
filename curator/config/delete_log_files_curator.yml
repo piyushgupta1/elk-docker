@@ -10,11 +10,11 @@ actions:
       ignore_empty_list: True
       disable_action: False
     filters:
-    - filtertype: pattern
-      kind: prefix
-      value: logstash-
-    - filtertype: age
-      source: creation_date
-      direction: older
-      unit: days
-      unit_count: ${UNIT_COUNT}
+      - filtertype: pattern
+        kind: prefix
+        value: .logs-
+      - filtertype: age
+        source: creation_date
+        direction: older
+        unit: days
+        unit_count: 30
